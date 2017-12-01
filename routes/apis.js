@@ -12,15 +12,16 @@ var DB_CONFIG = {
 
 function setupDBServer(res) {
   if (!DB_CONFIG) return;
-  var sequelize = new Sequelize('mariadb://' + DB_CONFIG.user + ':'
+
+  var sequelize = new Sequelize('mysql://' + DB_CONFIG.user + ':'
     + DB_CONFIG.pass + '@' + DB_CONFIG.ip + ':' + DB_CONFIG.port + '/' + DB_CONFIG.name);
   return sequelize;
 }
 
-router.get('/testApis', (req, res, next) => {
+router.get('/testApis', function(req, res, next) {
   var sequelize = setupDBServer(res);
   if (!sequelize) res.status(400).json({msg: "Bad Request"});
-
+  console.log('fff');
   sequelize.query('SELECT * FROM testTable;')
   .then((response) => {
     res.status(200).json(response);
@@ -29,4 +30,6 @@ router.get('/testApis', (req, res, next) => {
     console.log(error);
     res.status(400).json(error);
   })
-})
+});
+
+module.exports = router;
